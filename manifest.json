@@ -1,7 +1,7 @@
 {
   "id": "rss-generator",
   "name": "RSS Generator",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "minAppVersion": "1.5.0",
   "description": "Generate a static RSS feed from notes.",
   "author": "jackydangelo",

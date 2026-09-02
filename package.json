@@ -1,6 +1,6 @@
 {
   "name": "rss-generator",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Generate a static feed.xml from notes marked rss: true, for use with any static site generator.",
   "main": "main.js",
   "scripts": {

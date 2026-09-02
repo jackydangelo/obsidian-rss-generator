@@ -19,9 +19,9 @@ rss: true
 ---
 ```
 
-`rss: true` and `date` are required. `title` falls back to the filename; `description` falls back to an empty string.
+`rss: true` and the configured date property (`date` by default — see Settings) are required. `title` falls back to the filename; `description` falls back to an empty string.
 
-Run **"Generate RSS feed"** from the command palette. The plugin scans the whole vault, filters to notes with `rss: true` and a valid `date`, sorts by date descending, and writes the feed to the configured output path (creating or overwriting as needed).
+Run **"Generate RSS feed"** from the command palette. The plugin scans the whole vault, filters to notes with `rss: true` and a valid date value in the configured date property, sorts by date descending, and writes the feed to the configured output path (creating or overwriting as needed).
 
 ## Settings
 
@@ -31,6 +31,7 @@ Run **"Generate RSS feed"** from the command palette. The plugin scans the whole
 | Site title | `<title>` of the RSS channel |
 | Site URL | `<link>` of the channel, also used to build item links |
 | Site description | `<description>` of the channel |
+| Date property name | Frontmatter property to read as the publish date (default: `date`; e.g. `created` if you use Obsidian's creation-date property) |
 | Max items | Maximum number of items included in the feed |
 
 ## Design notes

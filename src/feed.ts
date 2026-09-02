@@ -24,12 +24,16 @@ interface NoteFrontmatter {
 const asString = (value: unknown): string | undefined =>
   typeof value === "string" ? value : undefined;
 
-const readFrontmatter = (app: App, file: TFile): NoteFrontmatter | null => {
+const readFrontmatter = (
+  app: App,
+  file: TFile,
+  datePropertyName: string
+): NoteFrontmatter | null => {
   const raw: unknown = app.metadataCache.getFileCache(file)?.frontmatter;
   if (typeof raw !== "object" || raw === null) return null;
 
   const record = raw as Record<string, unknown>;
-  const date = asString(record.date);
+  const date = asString(record[datePropertyName]);
   if (record.rss !== true || !date) return null;
 
   return {
@@ -42,8 +46,10 @@ const readFrontmatter = (app: App, file: TFile): NoteFrontmatter | null => {
 
 // --- filtering: rss: true anywhere in the vault, nothing else matters ---
 
-export const getRssFiles = (app: App): TFile[] =>
-  app.vault.getMarkdownFiles().filter((file) => readFrontmatter(app, file) !== null);
+export const getRssFiles = (app: App, settings: RssGeneratorSettings): TFile[] =>
+  app
+    .vault.getMarkdownFiles()
+    .filter((file) => readFrontmatter(app, file, settings.datePropertyName) !== null);
 
 // --- building item data --------------------------------------------------
 
@@ -52,7 +58,7 @@ export const buildItemData = (
   file: TFile,
   settings: RssGeneratorSettings
 ): FeedItemData => {
-  const frontmatter = readFrontmatter(app, file);
+  const frontmatter = readFrontmatter(app, file, settings.datePropertyName);
   const title = frontmatter?.title ?? file.basename;
   const slug = file.basename.toLowerCase().replace(/\s+/g, "-");
   const date = new Date(frontmatter?.date ?? file.stat.ctime);
@@ -107,7 +113,7 @@ ${limited.map(renderItem).join("\n")}
 };
 
 export const generateFeed = (app: App, settings: RssGeneratorSettings): string => {
-  const files = getRssFiles(app);
+  const files = getRssFiles(app, settings);
   const items = files.map((file) => buildItemData(app, file, settings));
   return buildFeedXml(items, settings);
 };

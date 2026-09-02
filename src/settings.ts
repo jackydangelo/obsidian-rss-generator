@@ -7,6 +7,7 @@ export interface RssGeneratorSettings {
   siteUrl: string;
   siteDescription: string;
   maxItems: number;
+  datePropertyName: string;
 }
 
 export const DEFAULT_SETTINGS: RssGeneratorSettings = {
@@ -15,6 +16,7 @@ export const DEFAULT_SETTINGS: RssGeneratorSettings = {
   siteUrl: "",
   siteDescription: "",
   maxItems: 20,
+  datePropertyName: "date",
 };
 
 export class RssGeneratorSettingTab extends PluginSettingTab {
@@ -31,7 +33,7 @@ export class RssGeneratorSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName("Output path")
-      .setDesc("Where to write the feed, relative to vault root (e.g. Feed.xml, public/feed.xml)")
+      .setDesc("Where to write the feed, relative to vault root (e.g. feed.xml, public/feed.xml)")
       .addText((text) =>
         text.setValue(this.plugin.settings.outputPath).onChange(async (value) => {
           this.plugin.settings.outputPath = value;
@@ -59,6 +61,16 @@ export class RssGeneratorSettingTab extends PluginSettingTab {
         await this.plugin.saveSettings();
       })
     );
+
+    new Setting(containerEl)
+      .setName("Date property name")
+      .setDesc("Frontmatter property to read as the publish date (e.g. Date, created)")
+      .addText((text) =>
+        text.setValue(this.plugin.settings.datePropertyName).onChange(async (value) => {
+          this.plugin.settings.datePropertyName = value.trim() || "date";
+          await this.plugin.saveSettings();
+        })
+      );
 
     new Setting(containerEl)
       .setName("Max items")
